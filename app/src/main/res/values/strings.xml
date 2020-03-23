@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CoronaVirusTracker</string>
+    <string name="total_name">Total</string>
+    <string name="infected_name">Infected</string>
+    <string name="d_name">Deaths</string>
+    <string name="recovered_name">Recovered</string>
+    <string name="state_name">State</string>
+    <string name="country_name">Country</string>
+    <string name="number_of_cases_name">Number of cases</string>
+    <string name="global_info">reported all across the Globe.</string>
+</resources>
