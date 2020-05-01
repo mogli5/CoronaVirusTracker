@@ -44,7 +44,10 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 
         infectedTextView.setText(": " + Integer.toString(cICases));
         dTextView.setText(": " + Integer.toString(cDCases));
-        recoveredTextView.setText(": " + Integer.toString(cRCases));
+        if(cRCases == -1)
+            recoveredTextView.setText(": N/A");
+        else
+            recoveredTextView.setText(": " + Integer.toString(cRCases));
 
         return locationView;
     }

@@ -44,6 +44,26 @@ public final class QueryUtils {
 
     public static final String LOG_TAG = CoronaVirusTracker.class.getName();
 
+    //without recovered
+    public static List<Location> fetchData(String infectedCasesURL, String deathsCasesURL){
+        URL iUrl = createURL(infectedCasesURL);
+        URL dUrl = createURL(deathsCasesURL);
+        List<String[]> iDataResponse = null;
+        List<String[]> dDataResponse = null;
+        try{
+            iDataResponse = makeHttpRequest(iUrl);
+        } catch (IOException e) {
+            Log.e(LOG_TAG,"Problem making the HTTP request.", e);
+        }
+        try{
+            dDataResponse = makeHttpRequest(dUrl);
+        } catch (IOException e) {
+            Log.e(LOG_TAG,"Problem making the HTTP request.", e);
+        }
+        List<Location> locations= extractFeaturesFromData(iDataResponse,dDataResponse);
+        return locations;
+    }
+
 
     public static List<Location> fetchData(String infectedCasesURL, String deathsCasesURL, String recoveredCasesURL){
         URL iUrl = createURL(infectedCasesURL);
@@ -153,6 +173,30 @@ public final class QueryUtils {
                 totalRecovered += locRecovered;
                 Log.v("Values Check","Province: "+ state + "  Country: " + country + "  Ncases: " + currentDayLocCases);
                 locations.add(new Location(country,state,currentDayLocCases,locD,locRecovered,diffFromprevDay));
+            }
+        }
+        return  locations;
+    }
+    private static List<Location> extractFeaturesFromData(List<String[]> iDataResponse,List<String[]> dDataResponse) {
+        List<Location>locations = new ArrayList<>();
+        if(iDataResponse!= null && dDataResponse!= null ){
+            Iterator<String[]>iIterator = iDataResponse.iterator();
+            Iterator<String[]>dIterator = dDataResponse.iterator();
+            iIterator.next();
+            dIterator.next();
+            while (iIterator.hasNext() && dIterator.hasNext()){
+                String[]iRecord = iIterator.next();
+                String[]dRecord = dIterator.next();
+                String country = iRecord[1];
+                String state = iRecord[0];
+                int currentDayLocCases = Integer.parseInt(iRecord[iRecord.length - 1]);
+                int prevDayLocCases = Integer.parseInt(iRecord[iRecord.length - 2]);
+                int locD = Integer.parseInt(dRecord[dRecord.length - 1]);
+                int diffFromprevDay = currentDayLocCases - prevDayLocCases;
+                totalInfected += currentDayLocCases;
+                totalD += locD;
+                Log.v("Values Check","Province: "+ state + "  Country: " + country + "  Ncases: " + currentDayLocCases);
+                locations.add(new Location(country,state,currentDayLocCases,locD,diffFromprevDay));
             }
         }
         return  locations;

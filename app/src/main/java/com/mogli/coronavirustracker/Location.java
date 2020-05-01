@@ -17,6 +17,14 @@ public class Location {
         cNumRecovered = recovered;
         cDiffFromPrevDay = diffFromPrevDay;
     }
+    public Location(String country, String state, int infected, int d , int diffFromPrevDay){
+        cCountry = country;
+        cState = state;
+        cNumInfected = infected;
+        cNumDeaths = d;
+        cNumRecovered = -1;
+        cDiffFromPrevDay = diffFromPrevDay;
+    }
 
     public int getcNumInfected() {
         return cNumInfected;
